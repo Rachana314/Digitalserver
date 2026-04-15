@@ -1,5 +1,5 @@
 import express from "express";
-import authMiddleware from "../middleware/authMiddleWare.js"; // This is your imported name
+import authMiddleware from "../middleware/authMiddleware.js"; 
 import { upload } from "../middleware/upload.js";
 import {
   getMe,
