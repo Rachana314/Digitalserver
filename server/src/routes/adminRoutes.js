@@ -40,17 +40,4 @@ router.patch("/requests/:id/status", updateRequestStatus);
 router.get("/reports/pdf", exportPDF);
 router.post("/reports/pdf", exportPDF);
 
-// add this import in adminController.js
-export const getVerifiedCitizens = async (req, res) => {
-  try {
-    const citizens = await VerifiedCitizen.find().lean();
-    res.json(citizens);
-  } catch (err) {
-    res.status(500).json({ message: "Failed to fetch verified citizens" });
-  }
-};
-
-// in adminRoutes.js
-router.get("/verified-citizens", getVerifiedCitizens);
-
 export default router;
