@@ -12,14 +12,13 @@ import {
   uploadDocument,
   deleteHousehold,
   getHouseholdMapData,
-  checkPhotoHash, // ✅ new import
+  checkPhotoHash,
+  getDocuments, // ✅ ADD THIS
 } from "../controller/householdController.js";
 
 const router = express.Router();
 
 router.get("/admin/map-data", authMiddleware, adminMiddleWare, getHouseholdMapData);
-
-// ✅ IMPORTANT: This must be ABOVE /:householdId routes
 router.post("/check-photo-hash", authMiddleware, checkPhotoHash);
 
 router.get("/", authMiddleware, listHouseholds);
@@ -30,5 +29,6 @@ router.post("/:householdId/submit", authMiddleware, submitHousehold);
 router.delete("/:householdId", authMiddleware, deleteHousehold);
 router.post("/:id/change-requests", authMiddleware, submitDeleteRequest);
 router.post("/:householdId/documents", authMiddleware, upload.single("file"), uploadDocument);
+router.get("/:householdId/documents", authMiddleware, getDocuments); // ✅ ADD THIS
 
 export default router;

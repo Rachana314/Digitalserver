@@ -162,7 +162,6 @@ export async function uploadDocument(req, res) {
     const fileBuffer = fs.readFileSync(req.file.path);
     const imageHash = crypto.createHash("md5").update(fileBuffer).digest("hex");
 
-    // ✅ Check duplicate across ALL households
     const isDuplicate = await Household.findOne({
       "documents.fileHash": imageHash,
     });
@@ -181,7 +180,6 @@ export async function uploadDocument(req, res) {
       return res.status(400).json({ message: "Cannot upload documents after verification." });
     }
 
-    // ✅ Check duplicate within same household
     const isDuplicateInSameHousehold = item.documents.some(
       (doc) => doc.fileHash === imageHash
     );
@@ -210,7 +208,7 @@ export async function uploadDocument(req, res) {
   }
 }
 
-// ✅ CHECK PHOTO HASH (duplicate detection before upload)
+// CHECK PHOTO HASH (duplicate detection before upload)
 export async function checkPhotoHash(req, res) {
   try {
     const { hash } = req.body;
@@ -306,5 +304,22 @@ export async function deleteHousehold(req, res) {
     return res.json({ message: "Deleted" });
   } catch (err) {
     return res.status(500).json({ message: err.message || "Failed to delete household" });
+  }
+}
+
+// ✅ GET DOCUMENTS FOR A HOUSEHOLD
+export async function getDocuments(req, res) {
+  try {
+    const { householdId } = req.params;
+    const item = await Household.findOne({
+      householdId: householdId,
+      user: req.user._id,
+    });
+
+    if (!item) return res.status(404).json({ message: "Household not found" });
+
+    return res.json(item.documents);
+  } catch (err) {
+    return res.status(500).json({ message: err.message || "Failed to get documents" });
   }
 }
